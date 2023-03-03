@@ -111,9 +111,9 @@ module DNNProcessingElement_Simba (
   reg [31:0] indexInput;
   reg [31:0] indexWeight;
 
-  reg [31:0] indexOutput_CNN[0:3];
-  reg [31:0] indexInput_CNN[0:3];
-  reg [31:0] indexWeight_CNN[0:15];
+  reg [31:0] indexOutput_CNN[0:3]; // [0:Mac_units-1]
+  reg [31:0] indexInput_CNN[0:3]; // [0:Multipliers-1]
+  reg [31:0] indexWeight_CNN[0:15]; // [0:Mac_units*Multipliers - 1]
 
 
   //local buffer
