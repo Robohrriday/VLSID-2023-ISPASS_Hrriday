@@ -380,16 +380,16 @@ module DNNProcessingElement_Simba (
             indexWeight_CNN[0] = s + (r * S) + ((c) * R * S) + ((m) * C * R * S);
             indexOutput_CNN[0] = q + p * Q + (m) * Q * P;
 
-            for (i=1; i<4; i=i+1)  // Need to change (MULTIPLIERS)
+              for (i=1; i<4; i=i+1)  // i < Multipliers
               begin
                 indexInput_CNN[i] = indexInput_CNN[0] + i * H * W;
               end
             
-            for (j=0; j<4; j=j+1)    
+              for (j=0; j<4; j=j+1)   // j < MAC_units 
               begin
-                for (n = 0; n<4; n = n+1) // Need to change (MULTIPLIERS)
+                  for (n = 0; n<4; n = n+1) // n < Multipliers
                 begin
-                  indexWeight_CNN[(4*j)+n] = indexWeight_CNN[0] + n * R * S + j * C * R * S;  
+                    indexWeight_CNN[(4*j)+n] = indexWeight_CNN[0] + n * R * S + j * C * R * S;  // The 4 in the ((4*j) + n) is the no. of multipliers
 
                 // indexWeight_CNN[(8*j)+0] = s + (r * S) + ((c+0) * R * S) + ((m+j) * C * R * S);
                 // indexWeight_CNN[(8*j)+1] = s + (r * S) + ((c+1) * R * S) + ((m+j) * C * R * S);                
@@ -402,13 +402,15 @@ module DNNProcessingElement_Simba (
               end
               end
             
-            for (k=1; k<4; k=k+1)
+              for (k=1; k<4; k=k+1) // k < MAC_units
               begin
                 indexOutput_CNN[k] = indexOutput_CNN[0] + k * Q * P;
               end
 
-            for (l = 0; l<4; l=l+1)
+              for (l = 0; l<4; l=l+1) // l < MAC_units
               begin
+                  // indexInput_CNN must be indexed from 0 to Multipliers - 1
+                  // indexWeight_CNN must be indexed from (Multipliers*l + 0) to (Multipliers*l + (Multipliers - 1)) 
                 outputs[indexOutput_CNN[l]] = outputs[indexOutput_CNN[l]] + (inputs[indexInput_CNN[0]]*weights[indexWeight_CNN[4*l+0]] + inputs[indexInput_CNN[1]]*weights[indexWeight_CNN[4*l+1]] + inputs[indexInput_CNN[2]]*weights[indexWeight_CNN[4*l+2]] + inputs[indexInput_CNN[3]]*weights[indexWeight_CNN[4*l+3]]);
               end
 
@@ -430,11 +432,11 @@ module DNNProcessingElement_Simba (
                     r = r + 1;
                   end else begin
                     r = 0;
-                    if (c < (C>>2) - 1) begin
+                      if (c < (C>>2) - 1) begin // (C >> log(Multipliers) base 2)
                       c = c + 1;
                     end else begin
                       c = 0;
-                      if (m < (M>>2) - 1) begin
+                        if (m < (M>>2) - 1) begin // (M >> log(MAC_units) base 2)
                         m = m + 1;
                       end else begin
                         m = 0;
