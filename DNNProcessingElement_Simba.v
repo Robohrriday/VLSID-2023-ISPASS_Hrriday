@@ -45,9 +45,9 @@ module DNNProcessingElement_Simba (
 
   //parameters
   parameter BITWIDTH = 8;
-  parameter INPUT_ARRAY_SIZE = 484;
-  parameter OUTPUT_ARRAY_SIZE = 484;
-  parameter WEIGHT_ARRAY_SIZE = 400;
+  parameter INPUT_ARRAY_SIZE = 100;
+  parameter OUTPUT_ARRAY_SIZE = 100;
+  parameter WEIGHT_ARRAY_SIZE = 100;
 
   parameter CNN_LAYER = 1;
   parameter MAX_POOL_LAYER = 2;
