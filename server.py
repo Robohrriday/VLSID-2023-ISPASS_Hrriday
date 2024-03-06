@@ -1,22 +1,22 @@
 import time
 import serial
+from serial.tools.list_ports import comports
 
-import serial.tools.list_ports
-
-ports = serial.tools.list_ports.comports()
+ports = comports()
 
 
-def printPortInfo():
+def printPortInfo(ports):
     for port, desc, hwid in sorted(ports):
         print("{}: {} [{}]".format(port, desc, hwid))
 
 
-def openPort(port="COM6", baudRate=9600):
+def openPort(port="COM12", baudRate=9600):
     return serial.Serial(port, baudRate)
 
 
 def closePort(serialPort):
     serialPort.close()
+    print('Port Closed')
 
 
 def sendLayerType(ser, layerType):
@@ -146,43 +146,43 @@ def readOutput(ser, M, C, P, Q, R, S, xStride, yStride, reuse):
 # sendShape(2,2,3,3,2,2,1,1)
 
 
-def main():
-    printPortInfo()
+def main(ports):
+    printPortInfo(ports)
     myPort = openPort()
-    input_list = []
-    weight_list = []
-    for i in range(128):
-        input_list.append(i - 10)
+    # input_list = []
+    # weight_list = []
+    # for i in range(128):
+    #     input_list.append(i - 10)
 
-    for i in range(256):
-        weight_list.append(i - 7)
+    # for i in range(256):
+    #     weight_list.append(i - 7)
 
-    # CNN LAYER
-    print("Processing First Layer")
-    sendLayerType(myPort, 1)
-    sendShape(myPort, 8, 8, 3, 3, 2, 2, 1, 1, 0)
-    sendInput(myPort, input_list)
-    sendWeight(myPort, weight_list)
-    readOutput(myPort, 8, 8, 3, 3, 2, 2, 1, 1, 0)
+    # # CNN LAYER
+    # print("Processing First Layer")
+    # sendLayerType(myPort, 1)
+    # sendShape(myPort, 8, 8, 3, 3, 2, 2, 1, 1, 0)
+    # sendInput(myPort, input_list)
+    # sendWeight(myPort, weight_list)
+    # readOutput(myPort, 8, 8, 3, 3, 2, 2, 1, 1, 0)
 
-    # # MAX_POOL_LAYER
-    # print("Processing Second Layer")
-    # sendLayerType(myPort, 2)
-    # sendShape_MAX_POOL(myPort, 8, 2, 2, 2, 2, 1, 1, 1)
-    # # sendInput(myPort, 1)
-    # # sendWeight(myPort, 2)
-    # readOutput(myPort, 8, 8, 2, 2, 2, 2, 1, 1, 1)
+    # # # MAX_POOL_LAYER
+    # # print("Processing Second Layer")
+    # # sendLayerType(myPort, 2)
+    # # sendShape_MAX_POOL(myPort, 8, 2, 2, 2, 2, 1, 1, 1)
+    # # # sendInput(myPort, 1)
+    # # # sendWeight(myPort, 2)
+    # # readOutput(myPort, 8, 8, 2, 2, 2, 2, 1, 1, 1)
 
-    # #RELU LAYER
-    # print("Processing Third Layer")
-    # sendLayerType(myPort, 3)
-    # sendShape_RELU(myPort, 2, 2, 8, 1)
-    # # sendInput(myPort, 1)
-    # # sendWeight(myPort, 2)
-    # readOutput(myPort, 2, 2, 8, 1)
+    # # #RELU LAYER
+    # # print("Processing Third Layer")
+    # # sendLayerType(myPort, 3)
+    # # sendShape_RELU(myPort, 2, 2, 8, 1)
+    # # # sendInput(myPort, 1)
+    # # # sendWeight(myPort, 2)
+    # # readOutput(myPort, 2, 2, 8, 1)
 
     closePort(myPort)
 
 
-if __name__ == "_main_":
-    main()
+print(ports)
+main(ports)
